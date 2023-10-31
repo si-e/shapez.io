@@ -81,7 +81,10 @@ export class HUDPinnedShapes extends BaseHUDPart {
     updateShapesAfterUpgrade() {
         for (let i = 0; i < this.pinnedShapes.length; ++i) {
             const key = this.pinnedShapes[i];
-            if (key === this.root.gameMode.getBlueprintShapeKey()) {
+            if (
+                key === this.root.gameMode.getBlueprintShapeKey() ||
+                key === this.root.gameMode.getRedprintShapeKey()
+            ) {
                 // Ignore blueprint shapes
                 continue;
             }
@@ -106,7 +109,10 @@ export class HUDPinnedShapes extends BaseHUDPart {
         if (key === this.root.hubGoals.currentGoal.definition.getHash()) {
             return this.root.hubGoals.currentGoal.required;
         }
-        if (key === this.root.gameMode.getBlueprintShapeKey()) {
+        if (
+            key === this.root.gameMode.getBlueprintShapeKey() ||
+            key === this.root.gameMode.getRedprintShapeKey()
+        ) {
             return null;
         }
 
@@ -140,7 +146,8 @@ export class HUDPinnedShapes extends BaseHUDPart {
     isShapePinned(key) {
         if (
             key === this.root.hubGoals.currentGoal.definition.getHash() ||
-            key === this.root.gameMode.getBlueprintShapeKey()
+            key === this.root.gameMode.getBlueprintShapeKey() ||
+            key === this.root.gameMode.getRedprintShapeKey()
         ) {
             // This is a "special" shape which is always pinned
             return true;
@@ -184,6 +191,15 @@ export class HUDPinnedShapes extends BaseHUDPart {
                 key: this.root.gameMode.getBlueprintShapeKey(),
                 canUnpin: false,
                 className: "blueprint",
+            });
+        }
+
+        // Pin blueprint shape as well
+        if (this.root.hubGoals.isRewardUnlocked(enumHubGoalRewards.reward_blueprints)) {
+            this.internalPinShape({
+                key: this.root.gameMode.getRedprintShapeKey(),
+                canUnpin: false,
+                className: "redprint",
             });
         }
 
@@ -318,7 +334,10 @@ export class HUDPinnedShapes extends BaseHUDPart {
             return;
         }
 
-        if (key === this.root.gameMode.getBlueprintShapeKey()) {
+        if (
+            key === this.root.gameMode.getBlueprintShapeKey() ||
+            key === this.root.gameMode.getRedprintShapeKey()
+        ) {
             // Can not pin the blueprint shape
             return;
         }

@@ -8,6 +8,7 @@ import { GameRoot } from "../root";
 import { ShapeDefinition } from "../shape_definition";
 import { HUDBetaOverlay } from "./parts/beta_overlay";
 import { HUDBlueprintPlacer } from "./parts/blueprint_placer";
+import { HUDRedprintCounter } from "./parts/redprint_counter";
 import { HUDBuildingsToolbar } from "./parts/buildings_toolbar";
 import { HUDBuildingPlacer } from "./parts/building_placer";
 import { HUDColorBlindHelper } from "./parts/color_blind_helper";
@@ -40,6 +41,7 @@ export class GameHUD {
             shapeUnpinRequested: /** @type {TypedSignal<[string]>} */ (new Signal()),
             notification: /** @type {TypedSignal<[string, enumNotificationType]>} */ (new Signal()),
             buildingsSelectedForCopy: /** @type {TypedSignal<[Array<number>]>} */ (new Signal()),
+            redprintConsumed: /** @type {TypedSignal<[]>} */ (new Signal()),
             pasteBlueprintRequested: /** @type {TypedSignal<[]>} */ (new Signal()),
             viewShapeDetailsRequested: /** @type {TypedSignal<[ShapeDefinition]>} */ (new Signal()),
             unlockNotificationFinished: /** @type {TypedSignal<[]>} */ (new Signal()),
@@ -49,6 +51,7 @@ export class GameHUD {
             buildingsToolbar: new HUDBuildingsToolbar(this.root),
 
             blueprintPlacer: new HUDBlueprintPlacer(this.root),
+            redprintCounter: new HUDRedprintCounter(this.root),
             buildingPlacer: new HUDBuildingPlacer(this.root),
 
             shapeTooltip: new HUDShapeTooltip(this.root),
@@ -194,6 +197,7 @@ export class GameHUD {
             "massSelector",
             "buildingPlacer",
             "blueprintPlacer",
+            "redprintCounter",
             "colorBlindHelper",
             "changesDebugger",
             "minerHighlight",

@@ -64,6 +64,10 @@ export class UndergroundBeltComponent extends Component {
         this.pendingItems = [];
     }
 
+    getShapeItemNumber() {
+        return this.pendingItems.filter(([item, _]) => item.getItemType() === "shape").length;
+    }
+
     /**
      * Tries to accept an item from an external source like a regular belt or building
      * @param {BaseItem} item

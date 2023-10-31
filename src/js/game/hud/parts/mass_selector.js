@@ -97,6 +97,8 @@ export class HUDMassSelector extends BaseHUDPart {
     }
 
     doDelete() {
+        this.root.hud.signals.redprintConsumed.dispatch();
+
         const entityUids = Array.from(this.selectedUids);
 
         // Build mapping from uid to entity
@@ -151,6 +153,8 @@ export class HUDMassSelector extends BaseHUDPart {
     }
 
     clearBelts() {
+        this.root.hud.signals.redprintConsumed.dispatch();
+
         for (const uid of this.selectedUids) {
             const entity = this.root.entityMgr.findByUid(uid);
             for (const component of Object.values(entity.components)) {
@@ -183,6 +187,8 @@ export class HUDMassSelector extends BaseHUDPart {
 
     doCut() {
         if (this.selectedUids.size > 0) {
+            this.root.hud.signals.redprintConsumed.dispatch();
+
             const entityUids = Array.from(this.selectedUids);
 
             const cutAction = () => {

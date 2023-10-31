@@ -57,6 +57,10 @@ export class ItemEjectorComponent extends Component {
         }
     }
 
+    getShapeItemNumber() {
+        return this.slots.filter(slot => slot.item && slot.item.getItemType() === "shape").length;
+    }
+
     /**
      * @param {Array<{pos: Vector, direction: enumDirection }>} slots The slots to eject on
      */

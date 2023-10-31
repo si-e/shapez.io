@@ -27,16 +27,20 @@ export const enumItemProcessorRequirements = {
     painterQuad: "painterQuad",
 };
 
-/** @typedef {{
+/**
+ * @typedef {{
  *  item: BaseItem,
  *  requiredSlot?: number,
  *  preferredSlot?: number
- * }} EjectorItemToEject */
+ * }} EjectorItemToEject
+ * */
 
-/** @typedef {{
+/**
+ * @typedef {{
  *  remainingTime: number,
  *  items: Array<EjectorItemToEject>,
- * }} EjectorCharge */
+ * }} EjectorCharge
+ * */
 
 export class ItemProcessorComponent extends Component {
     static getId() {
@@ -114,6 +118,23 @@ export class ItemProcessorComponent extends Component {
          * @type {Array<EjectorItemToEject>}
          */
         this.queuedEjects = [];
+    }
+
+    getShapeItemNumber() {
+        var number = 0;
+        this.inputSlots.forEach((item, _) => {
+            // if (!item.getItemType) {
+            //     console.log(item);  // what the hell
+            // }
+            if (item.getItemType && item.getItemType() === "shape") {
+                number++;
+            }
+        });
+        this.ongoingCharges.forEach(ec => {
+            number += ec.items.filter(eItem => eItem.item.getItemType() === "shape").length;
+        });
+        number += this.queuedEjects.filter(eItem => eItem.item.getItemType() === "shape").length;
+        return number;
     }
 
     /**

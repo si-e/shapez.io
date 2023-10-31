@@ -56,4 +56,11 @@ export class FilterComponent extends Component {
          */
         this.pendingItemsToReject = [];
     }
+
+    getShapeItemNumber() {
+        return (
+            this.pendingItemsToLeaveThrough.filter(pfi => pfi.item.getItemType() === "shape").length +
+            this.pendingItemsToReject.filter(pfi => pfi.item.getItemType() === "shape").length
+        );
+    }
 }

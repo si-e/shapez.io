@@ -48,6 +48,10 @@ export class MinerComponent extends Component {
         this.itemChainBuffer = [];
     }
 
+    getShapeItemNumber() {
+        return this.itemChainBuffer.filter(item => item.getItemType() === "shape").length;
+    }
+
     /**
      *
      * @param {BaseItem} item

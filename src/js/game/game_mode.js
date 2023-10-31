@@ -195,4 +195,9 @@ export class GameMode extends BasicSerializableObject {
     getBlueprintShapeKey() {
         return "CbCbCbRb:CwCwCwCw";
     }
+
+    /** @returns {string} */
+    getRedprintShapeKey() {
+        return "SrSrSrSr";
+    }
 }

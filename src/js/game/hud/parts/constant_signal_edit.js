@@ -81,6 +81,11 @@ export class HUDConstantSignalEdit extends BaseHUDPart {
                     this.root.gameMode.getBlueprintShapeKey()
                 )
             );
+            items.push(
+                this.root.shapeDefinitionMgr.getShapeItemFromShortKey(
+                    this.root.gameMode.getRedprintShapeKey()
+                )
+            );
         } else {
             // producer which can produce virtually anything
             const shapes = ["CuCuCuCu", "RuRuRuRu", "WuWuWuWu", "SuSuSuSu"];

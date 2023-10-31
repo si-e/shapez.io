@@ -63,6 +63,10 @@ export class BeltComponent extends Component {
         }
     }
 
+    getShapeItemNumber() {
+        return this.assignedPath.items.filter(([_, item]) => item.getItemType() === "shape").length;
+    }
+
     /**
      * Returns the effective length of this belt in tile space
      * @returns {number}

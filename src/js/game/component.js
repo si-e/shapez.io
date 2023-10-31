@@ -29,6 +29,14 @@ export class Component extends BasicSerializableObject {
      */
     clear() {}
 
+    /**
+     * Get all shape item number
+     * @returns {number}
+     */
+    getShapeItemNumber() {
+        return 0;
+    }
+
     /* dev:start */
 
     /**
