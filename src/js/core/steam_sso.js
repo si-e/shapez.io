@@ -1,12 +1,13 @@
 import { T } from "../translations";
 import { openStandaloneLink } from "./config";
 
-export let WEB_STEAM_SSO_AUTHENTICATED = false;
+export let WEB_STEAM_SSO_AUTHENTICATED = true;
 
 export async function authorizeViaSSOToken(app, dialogs) {
     if (G_IS_STANDALONE) {
         return;
     }
+    return;
 
     if (window.location.search.includes("sso_logout_silent")) {
         window.localStorage.setItem("steam_sso_auth_token", "");

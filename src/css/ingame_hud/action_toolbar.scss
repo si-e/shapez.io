@@ -1,0 +1,45 @@
+.action_toolbar {
+    position: absolute;
+    bottom: 120px; // 调整位置
+    left: 50%;
+    transform: translateX(-50%);
+    display: grid;
+    grid-auto-flow: column;
+    justify-items: center;
+    align-self: center;
+    grid-gap: 8px;
+    background: rgba($ingameHudBg, 0.07);
+    // border: 1px solid red; // 调试用，可以删除
+    transition: transform 120ms ease-in-out;
+    will-change: transform;
+
+    .action_button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        background-color: rgba($ingameHudBg, 0.07);
+        border-radius: $globalBorderRadius;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        cursor: pointer;
+        transition: all 0.12s ease-in-out;
+
+        .icon {
+            width: 24px;
+            height: 24px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            pointer-events: all;
+        }
+
+        &:hover {
+            background-color: rgba($accentColorDark, 0.1);
+        }
+
+        &:active {
+            transform: scale(0.95);
+        }
+    }
+}

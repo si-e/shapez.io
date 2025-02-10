@@ -9,6 +9,7 @@ import { ShapeDefinition } from "../shape_definition";
 import { HUDBetaOverlay } from "./parts/beta_overlay";
 import { HUDBlueprintPlacer } from "./parts/blueprint_placer";
 import { HUDBuildingsToolbar } from "./parts/buildings_toolbar";
+import { HUDPlacerToolbar } from "./parts/action_placer_toolbar";
 import { HUDBuildingPlacer } from "./parts/building_placer";
 import { HUDColorBlindHelper } from "./parts/color_blind_helper";
 import { HUDChangesDebugger } from "./parts/debug_changes";
@@ -47,6 +48,7 @@ export class GameHUD {
 
         this.parts = {
             buildingsToolbar: new HUDBuildingsToolbar(this.root),
+            actionPlacerToolbar: new HUDPlacerToolbar(this.root),
 
             blueprintPlacer: new HUDBlueprintPlacer(this.root),
             buildingPlacer: new HUDBuildingPlacer(this.root),
