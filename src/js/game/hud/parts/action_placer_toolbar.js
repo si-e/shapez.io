@@ -1,5 +1,5 @@
 import { HUDActionToolbar } from "./action_toolbar";
-
+import { SOUNDS } from "../../../platform/sound";
 
 export class HUDPlacerToolbar extends HUDActionToolbar {
     constructor(root) {
@@ -28,9 +28,7 @@ export class HUDPlacerToolbar extends HUDActionToolbar {
     }
 
     visibilityCondition() {
-        // return true;
-        const currentMetaBuilding = this.root.hud.parts.buildingPlacer.currentMetaBuilding;
-        return currentMetaBuilding.get() !== null;
+        return this.anyPlacementActive;
     }
 
     /**
@@ -41,18 +39,32 @@ export class HUDPlacerToolbar extends HUDActionToolbar {
         this.root.soundProxy.playUiClick();
         console.log("Confirm action triggered");
 
-        const buildingPlacer = this.root.hud.parts.buildingPlacer;
-        const metaBuilding = buildingPlacer.currentMetaBuilding.get();
         const pos = this.root.camera.lastMovingPosition;
+        if (!pos) return;
+        const worldPos = this.root.camera.screenToWorld(pos);
+        const tile = worldPos.toTileSpace();
 
-        if (!metaBuilding || !pos) {
-            // No active building
-            return;
+        if (this.buildingPlacementActive) {
+            const buildingPlacer = this.root.hud.parts.buildingPlacer;
+            const metaBuilding = buildingPlacer.currentMetaBuilding.get();
+            if (buildingPlacer.tryPlaceCurrentBuildingAt(tile)) {
+                this.root.soundProxy.playUi(metaBuilding.getPlacementSound());
+            }
         }
-        // Placement
-        this.lastDragTile = this.root.camera.screenToWorld(pos).toTileSpace();
-        if (buildingPlacer.tryPlaceCurrentBuildingAt(this.lastDragTile)) {
-            this.root.soundProxy.playUi(metaBuilding.getPlacementSound());
+        if (this.blueprintPlacementActive) {
+            const blueprintPlacer = this.root.hud.parts.blueprintPlacer;
+            const blueprint = blueprintPlacer.currentBlueprint.get();
+            if (!this.root.gameMode.getHasFreeCopyPaste() && !blueprint.canAfford(this.root)) {
+                this.root.soundProxy.playUiError();
+                return;
+            }
+            if (blueprint.tryPlace(this.root, tile)) {
+                if (!this.root.gameMode.getHasFreeCopyPaste()) {
+                    const cost = blueprint.getCost();
+                    this.root.hubGoals.takeShapeByKey(this.root.gameMode.getBlueprintShapeKey(), cost);
+                }
+                this.root.soundProxy.playUi(SOUNDS.placeBuilding);
+            }
         }
     }
 
@@ -64,8 +76,14 @@ export class HUDPlacerToolbar extends HUDActionToolbar {
         this.root.soundProxy.playUiClick();
         console.log("Rotate action triggered");
 
-        const buildingPlacer = this.root.hud.parts.buildingPlacer;
-        buildingPlacer.tryRotate();
+        if (this.buildingPlacementActive) {
+            const buildingPlacer = this.root.hud.parts.buildingPlacer;
+            buildingPlacer.tryRotate();
+        }
+        if (this.blueprintPlacementActive) {
+            const blueprintPlacer = this.root.hud.parts.blueprintPlacer;
+            blueprintPlacer.rotateBlueprint();
+        }
     }
 
     /**
@@ -78,5 +96,13 @@ export class HUDPlacerToolbar extends HUDActionToolbar {
 
         const currentMetaBuilding = this.root.hud.parts.buildingPlacer.currentMetaBuilding;
         currentMetaBuilding.set(null);
+        if (this.buildingPlacementActive) {
+            const buildingPlacer = this.root.hud.parts.buildingPlacer;
+            buildingPlacer.abortPlacement();
+        }
+        if (this.blueprintPlacementActive) {
+            const blueprintPlacer = this.root.hud.parts.blueprintPlacer;
+            blueprintPlacer.abortPlacement();
+        }
     }
 }

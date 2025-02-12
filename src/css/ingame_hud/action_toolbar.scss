@@ -1,3 +1,6 @@
+$action-button-size: 40px; // 默认按钮大小
+$action-button-gap: 8px; // 按钮之间的间距
+
 .action_toolbar {
     position: absolute;
     bottom: 120px; // 调整位置
@@ -7,18 +10,21 @@
     grid-auto-flow: column;
     justify-items: center;
     align-self: center;
-    grid-gap: 8px;
+    grid-gap: $action-button-gap;
     background: rgba($ingameHudBg, 0.07);
-    // border: 1px solid red; // 调试用，可以删除
     transition: transform 120ms ease-in-out;
     will-change: transform;
+
+    &:not(.visible) {
+        transform: translateX(-50%) translateY(#{D(100px)});
+    }
 
     .action_button {
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 40px;
-        height: 40px;
+        width: $action-button-size;
+        height: $action-button-size;
         background-color: rgba($ingameHudBg, 0.07);
         border-radius: $globalBorderRadius;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -26,8 +32,8 @@
         transition: all 0.12s ease-in-out;
 
         .icon {
-            width: 24px;
-            height: 24px;
+            width: calc(#{$action-button-size} * 0.6);
+            height: calc(#{$action-button-size} * 0.6);
             background-size: contain;
             background-repeat: no-repeat;
             background-position: center;
@@ -40,6 +46,64 @@
 
         &:active {
             transform: scale(0.95);
+        }
+    }
+}
+
+// 媒体查询：根据屏幕宽度调整按钮大小
+@media (max-width: 1920px) {
+    $action-button-size: 36px;
+    $action-button-gap: 6px;
+
+    .action_toolbar {
+        bottom: 110px;
+    }
+
+    .action_button {
+        width: $action-button-size;
+        height: $action-button-size;
+
+        .icon {
+            width: calc(#{$action-button-size} * 0.6);
+            height: calc(#{$action-button-size} * 0.6);
+        }
+    }
+}
+
+@media (max-width: 1280px) {
+    $action-button-size: 32px;
+    $action-button-gap: 4px;
+
+    .action_toolbar {
+        bottom: 100px;
+    }
+
+    .action_button {
+        width: $action-button-size;
+        height: $action-button-size;
+
+        .icon {
+            width: calc(#{$action-button-size} * 0.6);
+            height: calc(#{$action-button-size} * 0.6);
+        }
+    }
+}
+
+@media (max-width: 768px) {
+    $action-button-size: 28px;
+    $action-button-gap: 2px;
+
+    .action_toolbar {
+        bottom: 90px;
+    }
+
+    .action_button {
+        width: $action-button-size;
+        height: $action-button-size;
+
+        .icon {
+            width: calc(#{$action-button-size} * 0.6);
+            height: calc(#{$action-button-size} * 0.6);
         }
     }
 }

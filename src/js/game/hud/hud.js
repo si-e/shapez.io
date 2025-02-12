@@ -48,10 +48,11 @@ export class GameHUD {
 
         this.parts = {
             buildingsToolbar: new HUDBuildingsToolbar(this.root),
-            actionPlacerToolbar: new HUDPlacerToolbar(this.root),
 
             blueprintPlacer: new HUDBlueprintPlacer(this.root),
             buildingPlacer: new HUDBuildingPlacer(this.root),
+
+            actionPlacerToolbar: new HUDPlacerToolbar(this.root),
 
             shapeTooltip: new HUDShapeTooltip(this.root),
 
