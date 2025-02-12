@@ -29,6 +29,8 @@ import { HUDGameMenu } from "../hud/parts/game_menu";
 import { HUDConstantSignalEdit } from "../hud/parts/constant_signal_edit";
 import { IS_MOBILE } from "../../core/config";
 import { HUDKeybindingOverlay } from "../hud/parts/keybinding_overlay";
+import { HUDPlacerActionToolbar } from "../hud/parts/placer_action_toolbar";
+import { HUDMassSelectorActionToolbar } from "../hud/parts/mass_selector_action_toolbar";
 import { HUDWatermark } from "../hud/parts/watermark";
 import { HUDStandaloneAdvantages } from "../hud/parts/standalone_advantages";
 import { HUDPartTutorialHints } from "../hud/parts/tutorial_hints";
@@ -352,8 +354,10 @@ export class RegularGameMode extends GameMode {
             constantSignalEdit: HUDConstantSignalEdit,
         };
 
-        if (!IS_MOBILE) {
+        if (true) {
             this.additionalHudParts.keybindingOverlay = HUDKeybindingOverlay;
+            this.additionalHudParts.placerActionPlacerToolbar = HUDPlacerActionToolbar;
+            this.additionalHudParts.massSelectorActionToolbar = HUDMassSelectorActionToolbar;
         }
 
         if (this.root.app.restrictionMgr.getIsStandaloneMarketingActive()) {

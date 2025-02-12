@@ -1,7 +1,7 @@
 import { HUDActionToolbar } from "./action_toolbar";
 import { SOUNDS } from "../../../platform/sound";
 
-export class HUDPlacerToolbar extends HUDActionToolbar {
+export class HUDPlacerActionToolbar extends HUDActionToolbar {
     constructor(root) {
         super(root);
 
@@ -28,7 +28,8 @@ export class HUDPlacerToolbar extends HUDActionToolbar {
     }
 
     visibilityCondition() {
-        return this.anyPlacementActive;
+        const keybindingOverlay = this.root.hud.parts.keybindingOverlay;
+        return keybindingOverlay.anyPlacementActive;
     }
 
     /**
@@ -44,14 +45,15 @@ export class HUDPlacerToolbar extends HUDActionToolbar {
         const worldPos = this.root.camera.screenToWorld(pos);
         const tile = worldPos.toTileSpace();
 
-        if (this.buildingPlacementActive) {
+        const keybindingOverlay = this.root.hud.parts.keybindingOverlay;
+        if (keybindingOverlay.buildingPlacementActive) {
             const buildingPlacer = this.root.hud.parts.buildingPlacer;
             const metaBuilding = buildingPlacer.currentMetaBuilding.get();
             if (buildingPlacer.tryPlaceCurrentBuildingAt(tile)) {
                 this.root.soundProxy.playUi(metaBuilding.getPlacementSound());
             }
         }
-        if (this.blueprintPlacementActive) {
+        if (keybindingOverlay.blueprintPlacementActive) {
             const blueprintPlacer = this.root.hud.parts.blueprintPlacer;
             const blueprint = blueprintPlacer.currentBlueprint.get();
             if (!this.root.gameMode.getHasFreeCopyPaste() && !blueprint.canAfford(this.root)) {
@@ -76,11 +78,12 @@ export class HUDPlacerToolbar extends HUDActionToolbar {
         this.root.soundProxy.playUiClick();
         console.log("Rotate action triggered");
 
-        if (this.buildingPlacementActive) {
+        const keybindingOverlay = this.root.hud.parts.keybindingOverlay;
+        if (keybindingOverlay.buildingPlacementActive) {
             const buildingPlacer = this.root.hud.parts.buildingPlacer;
             buildingPlacer.tryRotate();
         }
-        if (this.blueprintPlacementActive) {
+        if (keybindingOverlay.blueprintPlacementActive) {
             const blueprintPlacer = this.root.hud.parts.blueprintPlacer;
             blueprintPlacer.rotateBlueprint();
         }
@@ -94,13 +97,12 @@ export class HUDPlacerToolbar extends HUDActionToolbar {
         this.root.soundProxy.playUiClick();
         console.log("Cancel action triggered");
 
-        const currentMetaBuilding = this.root.hud.parts.buildingPlacer.currentMetaBuilding;
-        currentMetaBuilding.set(null);
-        if (this.buildingPlacementActive) {
+        const keybindingOverlay = this.root.hud.parts.keybindingOverlay;
+        if (keybindingOverlay.buildingPlacementActive) {
             const buildingPlacer = this.root.hud.parts.buildingPlacer;
             buildingPlacer.abortPlacement();
         }
-        if (this.blueprintPlacementActive) {
+        if (keybindingOverlay.blueprintPlacementActive) {
             const blueprintPlacer = this.root.hud.parts.blueprintPlacer;
             blueprintPlacer.abortPlacement();
         }
