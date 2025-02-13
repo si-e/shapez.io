@@ -1,17 +1,19 @@
 $action-button-size: 40px; // 默认按钮大小
-$action-button-gap: 8px; // 按钮之间的间距
 
 .action_toolbar {
     position: absolute;
-    bottom: 120px; // 调整位置
+    @include S(bottom, 100px);
     left: 50%;
     transform: translateX(-50%);
+
     display: grid;
     grid-auto-flow: column;
     justify-items: center;
     align-self: center;
-    grid-gap: $action-button-gap;
-    background: rgba($ingameHudBg, 0.07);
+    grid-gap: D(8px);
+    grid-row: 1 / 2;
+
+    background: transparent;
     transition: transform 120ms ease-in-out;
     will-change: transform;
 
@@ -46,64 +48,6 @@ $action-button-gap: 8px; // 按钮之间的间距
 
         &:active {
             transform: scale(0.95);
-        }
-    }
-}
-
-// 媒体查询：根据屏幕宽度调整按钮大小
-@media (max-width: 1920px) {
-    $action-button-size: 36px;
-    $action-button-gap: 6px;
-
-    .action_toolbar {
-        bottom: 110px;
-    }
-
-    .action_button {
-        width: $action-button-size;
-        height: $action-button-size;
-
-        .icon {
-            width: calc(#{$action-button-size} * 0.6);
-            height: calc(#{$action-button-size} * 0.6);
-        }
-    }
-}
-
-@media (max-width: 1280px) {
-    $action-button-size: 32px;
-    $action-button-gap: 4px;
-
-    .action_toolbar {
-        bottom: 100px;
-    }
-
-    .action_button {
-        width: $action-button-size;
-        height: $action-button-size;
-
-        .icon {
-            width: calc(#{$action-button-size} * 0.6);
-            height: calc(#{$action-button-size} * 0.6);
-        }
-    }
-}
-
-@media (max-width: 768px) {
-    $action-button-size: 28px;
-    $action-button-gap: 2px;
-
-    .action_toolbar {
-        bottom: 90px;
-    }
-
-    .action_button {
-        width: $action-button-size;
-        height: $action-button-size;
-
-        .icon {
-            width: calc(#{$action-button-size} * 0.6);
-            height: calc(#{$action-button-size} * 0.6);
         }
     }
 }

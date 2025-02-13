@@ -718,6 +718,14 @@ export class HUDBuildingPlacerLogic extends BaseHUDPart {
         if (button === enumMouseButton.right && metaBuilding) {
             this.currentMetaBuilding.set(null);
         }
+
+        // Move fake
+        if (button === enumMouseButton.singleTouch && metaBuilding) {
+            this.currentlyDragging = false;
+            this.currentlyDeleting = false;
+            this.lastDragTile = null;
+            return STOP_PROPAGATION;
+        }
     }
 
     /**

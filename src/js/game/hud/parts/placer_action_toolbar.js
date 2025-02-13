@@ -40,7 +40,7 @@ export class HUDPlacerActionToolbar extends HUDActionToolbar {
         this.root.soundProxy.playUiClick();
         console.log("Confirm action triggered");
 
-        const pos = this.root.camera.lastMovingPosition;
+        const pos = this.root.app.mousePosition;
         if (!pos) return;
         const worldPos = this.root.camera.screenToWorld(pos);
         const tile = worldPos.toTileSpace();
