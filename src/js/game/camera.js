@@ -1,4 +1,4 @@
-import { clickDetectorGlobals } from "../core/click_detector";
+import { clickDetectorGlobals, MAX_MOVE_DISTANCE_PX } from "../core/click_detector";
 import { globalConfig, SUPPORT_TOUCH } from "../core/config";
 import { createLogger } from "../core/logging";
 import { Rectangle } from "../core/rectangle";
@@ -86,6 +86,12 @@ export class Camera extends BasicSerializableObject {
 
         /** @type {Vector} */
         this.touchPostMoveVelocity = new Vector(0, 0);
+
+        /** @type {Vector} */
+        this.lastTouchStartPos = new Vector(0, 0);
+
+        /** @type {number} */
+        this.lastTouchStartTime = 0.0;
 
         // Handlers
         this.downPreHandler = /** @type {TypedSignal<[Vector, enumMouseButton]>} */ (new Signal());
@@ -438,6 +444,21 @@ export class Camera extends BasicSerializableObject {
     }
 
     /**
+     * Returns if double-touch occurs
+     * @param {Vector} point
+     * @returns {boolean}
+     */
+    checkDoubleTouch(point) {
+        const touchStartPos = point;
+        const touchStartTime = performance.now();
+        const touchStartDistance = touchStartPos.distance(this.lastTouchStartPos);
+        const touchStartInterval = touchStartTime - this.lastTouchStartTime;
+        this.lastTouchStartPos = touchStartPos;
+        this.lastTouchStartTime = touchStartTime;
+        return touchStartDistance < MAX_MOVE_DISTANCE_PX && 50.0 < touchStartInterval && touchStartInterval <= 250.0;
+    }
+
+    /**
      * Mousedown handler
      * @param {MouseEvent} event
      */
@@ -557,7 +578,11 @@ export class Camera extends BasicSerializableObject {
 
         if (event.touches.length === 1) {
             const touch = event.touches[0];
-            this.combinedSingleTouchStartHandler(touch.clientX, touch.clientY, enumMouseButton.singleTouch);
+            if (this.checkDoubleTouch(new Vector(touch.clientX, touch.clientY))) {
+                this.combinedSingleTouchStartHandler(touch.clientX, touch.clientY, enumMouseButton.doubleTouch);
+            } else {
+                this.combinedSingleTouchStartHandler(touch.clientX, touch.clientY, enumMouseButton.singleTouch);
+            }
         } else if (event.touches.length === 2) {
             // if (this.pinchPreHandler.dispatch() === STOP_PROPAGATION) {
             //     // Something prevented pinching
