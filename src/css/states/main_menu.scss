@@ -95,7 +95,7 @@
     }
 
     .mainWrapper {
-        @include S(margin-top, 15px);
+        @include S(margin-top, 0px);
         align-items: start;
         justify-items: center;
         align-self: center;
@@ -513,8 +513,8 @@
             }
 
             &.owned {
-                @include S(height, 118px);
-                @include S(width, 250px);
+                @include S(height, 90px);
+                @include S(width, 230px);
                 background: uiResource("puzzle_460x215_15.png") center D(-5px) / cover repeat;
                 .dlcLogo {
                     display: none;
@@ -596,7 +596,7 @@
             position: relative;
             text-align: left;
             align-items: flex-start;
-            @include S(width, 250px);
+            @include S(width, 200px);
             @include S(padding, 15px);
             @include S(padding-bottom, 10px);
             @include S(border-radius, $globalBorderRadius);
@@ -668,7 +668,7 @@
 
             .modsList {
                 box-sizing: border-box;
-                @include S(height, 100px);
+                @include S(height, 50px);
                 @include S(padding, 5px);
                 border: D(1px) solid #eee;
                 overflow-y: scroll;
@@ -872,7 +872,7 @@
             flex-direction: column;
             @include S(padding, 10px);
             box-sizing: border-box;
-            @include S(min-height, 150px);
+            @include S(min-height, 120px);
 
             .savegamesNone {
                 align-items: center;
@@ -895,7 +895,7 @@
                 pointer-events: all;
                 @include S(padding-right, 5px);
                 margin-right: D(-5px);
-                @include S(max-height, 150px);
+                @include S(max-height, 120px);
                 display: grid;
                 grid-auto-flow: row;
                 @include S(grid-gap, 5px);

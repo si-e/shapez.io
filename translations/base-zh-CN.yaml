@@ -70,17 +70,17 @@ demoBanners:
     playtimeDisclaimerDownload: 您可以在完整版中继续您的存档游戏！ 点击<strong>此处</strong>下载您的存档游戏。
     titleV2: 现在就玩完整版的。
 mainMenu:
-    play: 开始游戏
+    play: 开始
     changelog: 更新日志
-    importSavegame: 读取存档
-    openSourceHint: 本游戏已开源！
+    importSavegame: 读取
+    openSourceHint: 本项目已开源！
     discordLink: 官方 Discord 服务器
     helpTranslate: 帮助我们翻译！
-    browserWarning: 很抱歉，本游戏在当前浏览器上可能运行缓慢！使用 Chrome 或者购买完整版以得到更好的体验。
+    browserWarning: 很抱歉，本项目在当前浏览器上可能运行缓慢！使用 Chrome 或者购买完整版以得到更好的体验。
     savegameLevel: 第 <x> 关
     savegameLevelUnknown: 未知关卡
-    continue: 继续游戏
-    newGame: 新游戏
+    continue: 继续
+    newGame: 新建
     madeBy: 作者：<author-link>
     subreddit: Reddit
     savegameUnnamed: 存档未命名
@@ -1151,7 +1151,7 @@ backendErrors:
     too-many-likes-already: 您的谜题已经得到了许多玩家的赞赏。如果您仍然希望删除它，请联系 support@shapez.io！
     no-permission: 您没有执行此操作的权限。
 mods:
-    title: 游戏模组（Mods）
+    title: 模组
     author: 作者
     version: 版本
     openFolder: 打开游戏模组（Mods）文件夹

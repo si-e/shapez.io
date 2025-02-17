@@ -47,10 +47,10 @@ export class MainMenuState extends GameState {
             !G_IS_STEAM_DEMO &&
             !G_GOG_VERSION;
         const showWegameFooter = G_WEGAME_VERSION;
-        const hasMods = MODS.anyModsActive();
-        const hasSteamBridge = !G_GOG_VERSION && !G_IS_STEAM_DEMO;
+        const hasMods = true || MODS.anyModsActive();
+        const hasSteamBridge = false && !G_GOG_VERSION && !G_IS_STEAM_DEMO;
 
-        let showExternalLinks = true;
+        let showExternalLinks = false && true;
 
         if (G_IS_STANDALONE) {
             if (G_WEGAME_VERSION || G_CHINA_VERSION) {
@@ -190,7 +190,7 @@ export class MainMenuState extends GameState {
                         ? `
 
                         ${
-                            ownsPuzzleDLC && !hasMods
+                            ownsPuzzleDLC
                                 ? `
                             <div class="puzzleContainer owned">
                                 <button class="styledButton puzzleDlcPlayButton">${T.mainMenu.play}</button>
@@ -199,7 +199,7 @@ export class MainMenuState extends GameState {
                         }
 
                         ${
-                            !ownsPuzzleDLC && !hasMods
+                            !ownsPuzzleDLC
                                 ? `
                             <div class="puzzleContainer notOwned">
                                 <p>${T.mainMenu.puzzleDlcText}</p>
@@ -238,7 +238,7 @@ export class MainMenuState extends GameState {
                             </div>
 
                             <div class="dlcHint">
-                                ${T.mainMenu.mods.warningPuzzleDLC}
+                                ${false ? T.mainMenu.mods.warningPuzzleDLC : ""}
                             </div>
 
 
@@ -347,6 +347,7 @@ export class MainMenuState extends GameState {
 
                 </div>
 
+                <a href="https://beian.miit.gov.cn/" target="_blank" style=" font-size:12px">粤ICP备2023009381号-1</a>
             `
             }
         `;
