@@ -1,4 +1,4 @@
-import { globalConfig } from "../../../core/config";
+import { globalConfig, IS_MOBILE } from "../../../core/config";
 import { gMetaBuildingRegistry } from "../../../core/global_registries";
 import { Signal, STOP_PROPAGATION } from "../../../core/signal";
 import { TrackedState } from "../../../core/tracked_state";
@@ -87,6 +87,18 @@ export class HUDBuildingPlacerLogic extends BaseHUDPart {
          * @type {Vector}
          */
         this.lastDragTile = null;
+
+        /**
+         * Whether we are currently touching
+         * @type {boolean}
+         */
+        this.currentlyTouching = false;
+
+        /**
+         * Whether use direction lock automatically
+         * @type {boolean}
+         */
+        this.autoActivateDirectionLock = IS_MOBILE;
 
         /**
          * The side for direction lock
@@ -193,7 +205,10 @@ export class HUDBuildingPlacerLogic extends BaseHUDPart {
         return (
             metaBuilding &&
             metaBuilding.getHasDirectionLockAvailable(this.currentVariant.get()) &&
-            this.root.keyMapper.getBinding(KEYMAPPINGS.placementModifiers.lockBeltDirection).pressed
+            (
+                this.autoActivateDirectionLock ||
+                this.root.keyMapper.getBinding(KEYMAPPINGS.placementModifiers.lockBeltDirection).pressed
+            )
         );
     }
 
@@ -250,9 +265,8 @@ export class HUDBuildingPlacerLogic extends BaseHUDPart {
      * Aborts any dragging
      */
     abortDragging() {
-        this.currentlyDragging = true;
+        this.currentlyDragging = false;
         this.currentlyDeleting = false;
-        this.initialPlacementVector = null;
         this.lastDragTile = null;
     }
 
@@ -721,9 +735,15 @@ export class HUDBuildingPlacerLogic extends BaseHUDPart {
 
         // Move fake
         if (button === enumMouseButton.singleTouch && metaBuilding) {
-            this.currentlyDragging = false;
+            this.currentlyTouching = true;
             this.currentlyDeleting = false;
-            this.lastDragTile = null;
+            if (this.isDirectionLockActive) {
+                this.currentlyDragging = true;
+                this.lastDragTile = this.root.camera.screenToWorld(pos).toTileSpace();
+            } else {
+                this.currentlyDragging = false;
+                this.lastDragTile = null;
+            }
             return STOP_PROPAGATION;
         }
     }
@@ -834,6 +854,11 @@ export class HUDBuildingPlacerLogic extends BaseHUDPart {
      */
     onMouseUp() {
         if (this.root.camera.getIsMapOverlayActive()) {
+            return;
+        }
+
+        if (this.currentlyTouching) {
+            this.currentlyTouching = false;
             return;
         }
 

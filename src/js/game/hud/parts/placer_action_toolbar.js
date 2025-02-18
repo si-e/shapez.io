@@ -49,8 +49,13 @@ export class HUDPlacerActionToolbar extends HUDActionToolbar {
         if (keybindingOverlay.buildingPlacementActive) {
             const buildingPlacer = this.root.hud.parts.buildingPlacer;
             const metaBuilding = buildingPlacer.currentMetaBuilding.get();
-            if (buildingPlacer.tryPlaceCurrentBuildingAt(tile)) {
-                this.root.soundProxy.playUi(metaBuilding.getPlacementSound());
+            // Check for direction lock
+            if (buildingPlacer.lastDragTile && buildingPlacer.currentlyDragging && buildingPlacer.isDirectionLockActive) {
+                buildingPlacer.executeDirectionLockedPlacement();
+            } else {
+                if (buildingPlacer.tryPlaceCurrentBuildingAt(tile)) {
+                    this.root.soundProxy.playUi(metaBuilding.getPlacementSound());
+                }
             }
         }
         if (keybindingOverlay.blueprintPlacementActive) {

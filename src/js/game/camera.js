@@ -709,6 +709,9 @@ export class Camera extends BasicSerializableObject {
      */
     combinedSingleTouchStartHandler(x, y, button) {
         const pos = new Vector(x, y);
+        if (button == enumMouseButton.singleTouch) {
+            this.root.app.mousePosition = pos;
+        }
         if (this.downPreHandler.dispatch(pos, button) === STOP_PROPAGATION) {
             // Somebody else captured it
             return;
