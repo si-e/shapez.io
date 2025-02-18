@@ -1,4 +1,5 @@
 import { makeDiv } from "../../../core/utils";
+import { IS_MOBILE } from "../../../core/config";
 import { T } from "../../../translations";
 import {
     getStringForKeyCode,
@@ -125,6 +126,13 @@ export class HUDKeybindingOverlay extends BaseHUDPart {
      * @param {HTMLElement} parent
      */
     createElements(parent) {
+        if (IS_MOBILE) {
+            /** @type {Array<KeyBinding>} */
+            this.keybindings = [];
+            this.element = makeDiv(parent, "ingame_HUD_KeybindingOverlay", []);
+            return;
+        }
+
         const mapper = this.root.keyMapper;
         const k = KEYMAPPINGS;
 
