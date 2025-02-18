@@ -2,26 +2,74 @@ import { makeOffscreenBuffer } from "../../../core/buffer_utils";
 import { globalConfig } from "../../../core/config";
 import { DrawParameters } from "../../../core/draw_parameters";
 import { Loader } from "../../../core/loader";
-import { lerp } from "../../../core/utils";
+import { lerp, makeDiv } from "../../../core/utils";
 import { SOUNDS } from "../../../platform/sound";
 import { KEYMAPPINGS } from "../../key_action_mapper";
 import { enumHubGoalRewards } from "../../tutorial_goals";
 import { BaseHUDPart } from "../base_hud_part";
+import { DynamicDomAttach } from "../dynamic_dom_attach";
 
 const copy = require("clipboard-copy");
 const wiresBackgroundDpi = 4;
 
 export class HUDWiresOverlay extends BaseHUDPart {
-    createElements(parent) {}
+    createElements(parent) {
+        this.element = makeDiv(parent, "ingame_HUD_LayerSwitch");
+
+        const buttons = [
+            {
+                id: "layer",
+                label: "SwitchLayers",
+                handler: this.switchLayers.bind(this),
+                keybinding: KEYMAPPINGS.ingame.switchLayers,
+                visible: this.getIsUnlocked.bind(this),
+            },
+        ];
+
+        /** @type {Array<{
+         * button: HTMLElement,
+         * condition: function,
+         * domAttach: DynamicDomAttach
+         * }>} */
+        this.visibilityToUpdate = [];
+
+        buttons.forEach(({ id, label, handler, keybinding, badge, notification, visible }) => {
+            const button = document.createElement("button");
+            button.classList.add(id);
+            this.element.appendChild(button);
+            this.trackClicks(button, handler);
+
+            if (keybinding) {
+                const binding = this.root.keyMapper.getBinding(keybinding);
+                binding.add(handler);
+            }
+
+            if (visible) {
+                this.visibilityToUpdate.push({
+                    button,
+                    condition: visible,
+                    domAttach: new DynamicDomAttach(this.root, button),
+                });
+            }
+        });
+
+    }
 
     initialize() {
         // Probably not the best location, but the one which makes most sense
-        this.root.keyMapper.getBinding(KEYMAPPINGS.ingame.switchLayers).add(this.switchLayers, this);
         this.root.keyMapper.getBinding(KEYMAPPINGS.placement.copyWireValue).add(this.copyWireValue, this);
 
         this.generateTilePattern();
 
         this.currentAlpha = 0.0;
+    }
+
+    /**
+     * Returns whether wires is unlocked for the given game
+     */
+    getIsUnlocked() {
+        return this.root.hubGoals.isRewardUnlocked(enumHubGoalRewards.reward_wires_painter_and_levers) ||
+        (G_IS_DEV && globalConfig.debug.allBuildingsUnlocked);
     }
 
     /**
@@ -32,10 +80,7 @@ export class HUDWiresOverlay extends BaseHUDPart {
             return;
         }
         if (this.root.currentLayer === "regular") {
-            if (
-                this.root.hubGoals.isRewardUnlocked(enumHubGoalRewards.reward_wires_painter_and_levers) ||
-                (G_IS_DEV && globalConfig.debug.allBuildingsUnlocked)
-            ) {
+            if (this.getIsUnlocked()) {
                 this.root.currentLayer = "wires";
             }
         } else {
@@ -61,6 +106,12 @@ export class HUDWiresOverlay extends BaseHUDPart {
     }
 
     update() {
+        // Update visibility of buttons
+        for (let i = 0; i < this.visibilityToUpdate.length; ++i) {
+            const { condition, domAttach } = this.visibilityToUpdate[i];
+            domAttach.update(condition());
+        }
+
         const desiredAlpha = this.root.currentLayer === "wires" ? 1.0 : 0.0;
 
         // On low performance, skip the fade

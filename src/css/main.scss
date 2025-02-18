@@ -40,6 +40,7 @@
 @import "ingame_hud/unlock_notification";
 @import "ingame_hud/shop";
 @import "ingame_hud/game_menu";
+@import "ingame_hud/layer_switch";
 @import "ingame_hud/dialogs";
 @import "ingame_hud/vignette_overlay";
 @import "ingame_hud/statistics";
@@ -78,6 +79,7 @@ ingame_HUD_PuzzleDLCLogo,
 ingame_HUD_Waypoints,
 ingame_HUD_PlacementHints,
 ingame_HUD_PlacerVariants,
+ingame_HUD_LayerSwitch,
 
 // Regular hud
 ingame_HUD_PinnedShapes,
