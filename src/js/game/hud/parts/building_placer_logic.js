@@ -197,6 +197,19 @@ export class HUDBuildingPlacerLogic extends BaseHUDPart {
     }
 
     /**
+     * Returns the current tile to the mouse position
+     * @returns {Vector|null}
+     */
+    get mouseTile() {
+        const mousePosition = this.root.app.mousePosition;
+        if (!mousePosition) {
+            return null;
+        }
+        const worldPos = this.root.camera.screenToWorld(mousePosition);
+        return worldPos.toTileSpace();
+    }
+
+    /**
      * Returns if the direction lock is currently active
      * @returns {boolean}
      */
@@ -206,7 +219,7 @@ export class HUDBuildingPlacerLogic extends BaseHUDPart {
             metaBuilding &&
             metaBuilding.getHasDirectionLockAvailable(this.currentVariant.get()) &&
             (
-                this.autoActivateDirectionLock ||
+                (this.autoActivateDirectionLock && this.lastDragTile && !this.lastDragTile.equals(this.mouseTile)) ||
                 this.root.keyMapper.getBinding(KEYMAPPINGS.placementModifiers.lockBeltDirection).pressed
             )
         );
@@ -737,9 +750,11 @@ export class HUDBuildingPlacerLogic extends BaseHUDPart {
         if (button === enumMouseButton.singleTouch && metaBuilding) {
             this.currentlyTouching = true;
             this.currentlyDeleting = false;
-            if (this.isDirectionLockActive) {
+            if (this.autoActivateDirectionLock &&
+                metaBuilding.getHasDirectionLockAvailable(this.currentVariant.get())) {
                 this.currentlyDragging = true;
                 this.lastDragTile = this.root.camera.screenToWorld(pos).toTileSpace();
+                this.currentDirectionLockSideIndeterminate = true;
             } else {
                 this.currentlyDragging = false;
                 this.lastDragTile = null;
@@ -758,7 +773,7 @@ export class HUDBuildingPlacerLogic extends BaseHUDPart {
         }
 
         // Check for direction lock
-        if (this.isDirectionLockActive) {
+        if (this.isDirectionLockActive || this.currentlyTouching) {
             return;
         }
 
