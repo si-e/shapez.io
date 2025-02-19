@@ -18,7 +18,7 @@ export class HUDLeverToggle extends BaseHUDPart {
         if (contents) {
             const leverComp = contents.components.Lever;
             if (leverComp) {
-                if (button === enumMouseButton.left) {
+                if (button === enumMouseButton.left || button === enumMouseButton.singleTouch) {
                     leverComp.toggled = !leverComp.toggled;
                     return STOP_PROPAGATION;
                 } else if (button === enumMouseButton.right) {

@@ -233,6 +233,8 @@ export class HUDMassSelector extends BaseHUDPart {
             return;
         }
 
+        this.root.hud.parts.buildingPlacer.abortPlacement();
+
         if (!this.root.keyMapper.getBinding(KEYMAPPINGS.massSelect.massSelectSelectMultiple).pressed) {
             // Start new selection
             this.selectedUids = new Set();

@@ -960,7 +960,7 @@ export class Camera extends BasicSerializableObject {
             return;
         }
 
-        const panAreaPixels = 2;
+        const panAreaPixels = SUPPORT_TOUCH ? 20 : 2;
 
         const panVelocity = new Vector();
         if (mousePos.x < panAreaPixels) {

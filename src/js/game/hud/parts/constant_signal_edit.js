@@ -39,7 +39,7 @@ export class HUDConstantSignalEdit extends BaseHUDPart {
         if (contents) {
             const constantComp = contents.components.ConstantSignal;
             if (constantComp) {
-                if (button === enumMouseButton.left) {
+                if (button === enumMouseButton.left || button === enumMouseButton.singleTouch) {
                     this.editConstantSignal(contents, {
                         deleteOnCancel: false,
                     });
