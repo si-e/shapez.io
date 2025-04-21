@@ -130,6 +130,7 @@ export class PlatformWrapperInterface {
      * Whether this platform supports a keyboard
      */
     getSupportsKeyboard() {
-        return !IS_MOBILE;
+        // return !IS_MOBILE;
+        return true;
     }
 }
