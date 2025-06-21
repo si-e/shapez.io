@@ -20,6 +20,8 @@ const velocityFade = 0.98;
 const velocityStrength = 0.4;
 const velocityMax = 20;
 const ticksBeforeErasingVelocity = 10;
+const touchHoldTimeoutMs = 500; // Timeout duration for touch hold in milliseconds
+const touchDoubleTapMsRange = [50, 300]; // Time range for double tap detection in milliseconds
 
 /**
  * @enum {string}
@@ -60,6 +62,8 @@ export class Camera extends BasicSerializableObject {
         this.didMoveSinceTouchStart = false;
         this.currentlyPinching = false;
         this.lastPinchPositions = null;
+        this.currentlyHolding = false;
+        this.touchHoldTimeoutID = null;
 
         this.keyboardForce = new Vector();
 
@@ -195,6 +199,16 @@ export class Camera extends BasicSerializableObject {
     }
 
     /**
+     * Clears the touch hold timeout if it exists
+     */
+    clearTouchHoldTimeout() {
+        if (this.touchHoldTimeoutID) {
+            clearTimeout(this.touchHoldTimeoutID);
+            this.touchHoldTimeoutID = null;
+        }
+    }
+
+    /**
      * Clears all animations
      */
     clearAnimations() {
@@ -210,6 +224,8 @@ export class Camera extends BasicSerializableObject {
         this.lastMovingPosition = null;
         this.didMoveSinceTouchStart = false;
         this.desiredZoom = null;
+        this.currentlyHolding = false;
+        this.clearTouchHoldTimeout();
     }
 
     /**
@@ -247,6 +263,8 @@ export class Camera extends BasicSerializableObject {
         this.currentlyMoving = false;
         this.currentlyPinching = false;
         this.desiredZoom = null;
+        this.currentlyHolding = false;
+        this.clearTouchHoldTimeout();
     }
 
     /**
@@ -453,9 +471,13 @@ export class Camera extends BasicSerializableObject {
         const touchStartTime = performance.now();
         const touchStartDistance = touchStartPos.distance(this.lastTouchStartPos);
         const touchStartInterval = touchStartTime - this.lastTouchStartTime;
+        const doubleTouchHappens =
+            touchStartDistance < MAX_MOVE_DISTANCE_PX &&
+            touchDoubleTapMsRange[0] < touchStartInterval &&
+            touchStartInterval <= touchDoubleTapMsRange[1];
         this.lastTouchStartPos = touchStartPos;
         this.lastTouchStartTime = touchStartTime;
-        return touchStartDistance < MAX_MOVE_DISTANCE_PX && 50.0 < touchStartInterval && touchStartInterval <= 250.0;
+        return doubleTouchHappens;
     }
 
     /**
@@ -575,13 +597,35 @@ export class Camera extends BasicSerializableObject {
 
         clickDetectorGlobals.lastTouchTime = performance.now();
         this.touchPostMoveVelocity = new Vector(0, 0);
+        // Clear any previous touch hold timeout
+        this.clearTouchHoldTimeout();
 
         if (event.touches.length === 1) {
             const touch = event.touches[0];
             if (this.checkDoubleTouch(new Vector(touch.clientX, touch.clientY))) {
-                this.combinedSingleTouchStartHandler(touch.clientX, touch.clientY, enumMouseButton.doubleTouch);
+                // This is a double touch
+                this.combinedSingleTouchStartHandler(
+                    touch.clientX,
+                    touch.clientY,
+                    enumMouseButton.doubleTouch
+                );
             } else {
-                this.combinedSingleTouchStartHandler(touch.clientX, touch.clientY, enumMouseButton.singleTouch);
+                // Perhaps this is a single/double/long touch
+                this.touchHoldTimeoutID = setTimeout(() => {
+                    this.currentlyHolding = true;
+                    this.touchHoldTimeoutID = null;
+                    this.combinedSingleTouchStartHandler(
+                        touch.clientX,
+                        touch.clientY,
+                        enumMouseButton.longTouch
+                    );
+                }, touchHoldTimeoutMs);
+                // But let's immediately treat it as a single touch
+                this.combinedSingleTouchStartHandler(
+                    touch.clientX,
+                    touch.clientY,
+                    enumMouseButton.singleTouch
+                );
             }
         } else if (event.touches.length === 2) {
             // if (this.pinchPreHandler.dispatch() === STOP_PROPAGATION) {
@@ -741,8 +785,13 @@ export class Camera extends BasicSerializableObject {
             return;
         }
 
-        if (!this.currentlyMoving) {
+        if (!this.currentlyMoving || this.currentlyHolding) {
             return false;
+        }
+
+        if (this.lastTouchStartPos.distance(pos) >= MAX_MOVE_DISTANCE_PX) {
+            // If the user moved too far, we don't consider it a long touch anymore
+            this.clearTouchHoldTimeout();
         }
 
         let delta = this.lastMovingPosition.sub(pos).divideScalar(this.zoomLevel);
@@ -780,6 +829,11 @@ export class Camera extends BasicSerializableObject {
             this.lastPinchPositions = null;
             this.userInteraction.dispatch(USER_INTERACT_TOUCHEND);
             this.didMoveSinceTouchStart = false;
+        }
+        if (this.currentlyHolding) {
+            this.currentlyHolding = false;
+        } else {
+            this.clearTouchHoldTimeout();
         }
         this.upPostHandler.dispatch(new Vector(x, y));
     }

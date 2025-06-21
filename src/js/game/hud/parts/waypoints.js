@@ -497,10 +497,10 @@ export class HUDWaypoints extends BaseHUDPart {
     onMouseDown(pos, button) {
         const waypoint = this.findCurrentIntersectedWaypoint();
         if (waypoint) {
-            if (button === enumMouseButton.left) {
+            if (button === enumMouseButton.left || button === enumMouseButton.singleTouch) {
                 this.root.soundProxy.playUiClick();
                 this.moveToWaypoint(waypoint);
-            } else if (button === enumMouseButton.right) {
+            } else if (button === enumMouseButton.right || button === enumMouseButton.longTouch) {
                 if (this.isWaypointDeletable(waypoint)) {
                     this.root.soundProxy.playUiClick();
                     this.requestSaveMarker({ waypoint });
@@ -512,7 +512,7 @@ export class HUDWaypoints extends BaseHUDPart {
             return STOP_PROPAGATION;
         } else {
             // Allow right click to create a marker
-            if (button === enumMouseButton.right) {
+            if (button === enumMouseButton.right || button === enumMouseButton.longTouch) {
                 if (this.root.camera.getIsMapOverlayActive()) {
                     const worldPos = this.root.camera.screenToWorld(pos);
                     this.requestSaveMarker({ worldPos });

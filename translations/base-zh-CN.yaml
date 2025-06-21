@@ -351,7 +351,7 @@ ingame:
         waypoints: 地图标记
         hub: 中心
         description: 左键点击地图标记以跳转到该处，右键点击可删除地图标记。<br><br>按 <keybinding>
-            在当前地点创建地图标记，或者在选定位置上<strong>右键</strong>创建地图标记。
+            或者<strong>右键</strong>或者<strong>单指长按</strong>创建地图标记。
         creationSuccessNotification: 成功创建地图标记。
     interactiveTutorial:
         title: 新手教程
@@ -1059,7 +1059,7 @@ tips:
     - 模块化，可以使您提高效率。
     - 记得做一个单独的蓝图工厂。
     - 仔细看看调色器，您就会调色了。
-    - <b>CTRL + 点击</b>能够选择一块区域。
+    - <b>CTRL + 点击</b>或者<strong>单指双击</strong>能够选择一块区域。
     - 设施建得离基地太近很可能会妨碍以后的工作。
     - 使用升级列表中每个形状旁边的固定图标将其固定到屏幕上。
     - 地图无限，放飞想象，尽情创造。
