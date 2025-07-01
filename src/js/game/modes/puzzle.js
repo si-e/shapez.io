@@ -8,6 +8,9 @@ import { enumGameModeTypes, GameMode } from "../game_mode";
 import { HUDPuzzleBackToMenu } from "../hud/parts/puzzle_back_to_menu";
 import { HUDPuzzleDLCLogo } from "../hud/parts/puzzle_dlc_logo";
 import { HUDMassSelector } from "../hud/parts/mass_selector";
+import { HUDKeybindingOverlay } from "../hud/parts/keybinding_overlay";
+import { HUDPlacerActionToolbar } from "../hud/parts/placer_action_toolbar";
+import { HUDMassSelectorActionToolbar } from "../hud/parts/mass_selector_action_toolbar";
 
 export class PuzzleGameMode extends GameMode {
     static getType() {
@@ -33,6 +36,13 @@ export class PuzzleGameMode extends GameMode {
             puzzleDlcLogo: HUDPuzzleDLCLogo,
             massSelector: HUDMassSelector,
         };
+
+        if (true) {
+            // IS_MOBILE
+            this.additionalHudParts.keybindingOverlay = HUDKeybindingOverlay;
+            this.additionalHudParts.placerActionPlacerToolbar = HUDPlacerActionToolbar;
+            this.additionalHudParts.massSelectorActionToolbar = HUDMassSelectorActionToolbar;
+        }
 
         this.zoneWidth = data.zoneWidth || 8;
         this.zoneHeight = data.zoneHeight || 6;
